@@ -1,0 +1,77 @@
+{
+	"rows": 100,
+	"filename": "D:\\OneDrive\\Dokumente\\Programmierung\\Python\\CSV-Generator\\datei1.csv",
+	"counter": [
+		{
+		"title": "Counter 0",
+		"start": 1,
+		"stop": 50000,
+		"step": 1,
+		"width": 6,
+		"leading_zero": true,
+		"enabled": true
+		},
+		{
+		"title": "Counter 1",
+		"start": 0,
+		"stop": 2000,
+		"step": 3,
+		"width": 5,
+		"leading_zero": true,
+		"enabled": true
+		},
+		{
+		"title": "Counter 2",
+		"start": 5000,
+		"stop": 1000,
+		"step": -5,
+		"width": 5,
+		"leading_zero": true,
+		"enabled": true
+		}
+	],
+	"random_string": [
+		{
+		"title": "Random String 0",
+		"width": 12,
+		"character_set": "abcdefghijklmnopqrstuvwxyz",
+		"enabled": true
+		},
+		{
+		"title": "Random String 1",
+		"width": 94,
+		"character_set": "0123456789ABCDEF",
+		"enabled": true
+		},
+		{
+		"title": "Random String 2",
+		"width": 4,
+		"character_set": "01",
+		"enabled": true
+		}
+	],
+	"random_word": [
+		{
+		"title": "Random Word 0",
+		"word_list": ["ä", "ö,", "ü", "ß", "Ä", "Ö", "Ü", "Hein", "Susi", "Tim", "Struppi", "Pluto", "Mickey", "Minni", "Charly"],
+		"enabled": true
+		},
+		{
+		"title": "Random Word 1",
+		"word_list": ["Blöd", "Sorglos", "Disney", "Brown", "Einstein", "Mouse"],
+		"enabled": true
+		}
+	],
+	"word_cycle": [
+		{	
+		"title": "Word Cycle 0",
+		"word_list": ["Text 1", "Text 2", "Text 3"],
+		"enabled": true
+		},
+		{	
+		"title": "Word Cycle 1",
+		"word_list": ["Wort 1", "Wort 2", "Wort 3", "Wort 4"],
+		"enabled": true
+		}
+	]
+}
