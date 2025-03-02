@@ -1,121 +1,96 @@
-import json
-import random
+import csv
 import sys
-import io
+import json
+from random import choice
 
 
-def counter():
-    print(config[config_type][i]['title'])
-    print(config[config_type][i]['start'])
-    print(config[config_type][i]['stop'])
-    print(config[config_type][i]['step'])
-    print(config[config_type][i]['width'])
-    print(config[config_type][i]['leading_zero'])
-    print(config[config_type][i]['enabled'])
-    print('--------------')
-    start = config[config_type][i]['start']
-    stop = config[config_type][i]['stop']
-    step = config[config_type][i]['step']
-    width = config[config_type][i]['width']
-    column =[]
-    counter = config[config_type][i]['start']
-    for n in range(config['rows']):
-        if config[config_type][i]['leading_zero']:
-            string = str(counter).zfill(width)
+def counter(config_rows, item):
+    column = [item['title']]
+    counter = item['start']
+    for _ in range(config_rows):
+        if item['leading_zero']:
+            string = str(counter).zfill(item['width'])
         else:
             string = str(counter)
 
-        column.append(str(string))
+        column.append(string)
 
-        counter = counter + step
-        if counter > stop and step > 0:
-            counter = start
-        if counter < stop and step < 0:
-            counter = start
+        counter = counter + item['step']
+        if counter > item['stop'] and item['step'] > 0:
+            counter = item['start']
+        if counter < item['stop'] and item['step'] < 0:
+            counter = item['start']
     return column
 
 
-def random_string():
-    print(config[config_type][i]['title'])
-    print(config[config_type][i]['width'])
-    print(config[config_type][i]['character_set'])
-    print(config[config_type][i]['enabled'])
-    print('--------------')
-    width = config[config_type][i]['width']
-    column = []
-    for n in range(config['rows']):
+def random_string(config_rows, item):
+    column = [item['title']]
+    for _ in range(config_rows):
         string = ''
-        for o in range(width):
-            string = string + random.choice(config[config_type][i]['character_set'])
-
+        for _ in range(item['length']):
+            string = string + choice(item['character_set'])
         column.append(string)
     return column
 
 
-def random_word():
-    print(config[config_type][i]['title'])
-    print(config[config_type][i]['word_list'])
-    print(config[config_type][i]['enabled'])
-    print('--------------')
-    column = []
-    for n in range(config['rows']):
-        random_word = random.choice(config[config_type][i]['word_list'])
-        column.append(random_word)
+def random_word(config_rows, item):
+    column = [item['title']]
+    for _ in range(config_rows):
+        column.append(choice(item['word_list']))
+
     return column
 
 
-def word_cycle():
-    print(config[config_type][i]['title'])
-    print(config[config_type][i]['word_list'])
-    print(config[config_type][i]['enabled'])
-    print('--------------')
-    words = len(config[config_type][i]['word_list'])
-    column = (config[config_type][i]['word_list'] * (config['rows'] // words + 1))[:config['rows']]
+def word_cycle(config_rows, item):
+    column = [item['title']]
+    column = column + (item['word_list']*(config_rows // len(item['word_list']) + 1))[:config_rows]
     return column
 
 
-if len(sys.argv) == 1:
-    print('Es muss ein Dateiname als einziger Parameter übergeben werden')
-    print('z.B.: CSV-Generator.exe d:\\test.py.json')
-    print()
-    input('ENTER zum beenden')
-    sys.exit()
+def main():
+    with open('CSV-Generator_config.json') as json_data:
+        config = json.load(json_data)
 
-with open(sys.argv[1],'r') as file:
-    config = json.load(file)
+    config_general = config['general']
+    print(f'{config_general = }')
+    config_columns = config['columns']
+    print(f'{config_columns = }')
 
-config_types = ['counter', 'random_string', 'random_word', "word_cycle"]
-columns = {}
-column_names = []
+    config_rows = config_general['rows']
+    print(f'{config_rows = }')
+    config_file = config_general['filename']
+    print(f'{config_file = }')
 
-for config_type in config_types:
-    print('###############################')
-    print('# ' + config_type + ': ', end='')
-    print(len(config[config_type]))
-    print('###############################')
+    columns = {}
+    for column in range(len(config_columns)):
+        item = config_columns[column]
+        print('############################\n### ' + item['type'])
+        print(f'{item = }')
 
-    for i in range(len(config[config_type])):
-        if config[config_type][i]['enabled']:
-            columns_name = config[config_type][i]['title']
-            column_names.append(columns_name)
-            columns[columns_name] = globals()[config_type]()
-            print('Result: ', end='')
-            print(columns[columns_name])
-            print()
-            print()
+        if item['enabled']:
+            match config_columns[column]['type']:
+                case 'counter':
+                    columns[column] = counter(config_rows, item)
+                case 'random_string':
+                    columns[column] = random_string(config_rows, item)
+                case 'random_word':
+                    columns[column] = random_word(config_rows, item)
+                case 'word_cycle':
+                    columns[column] = word_cycle(config_rows, item)
+                case _:
+                    print('Fehler')
+        else:
+            print('disabled')
 
-    print()
+        print('column[' + str(column) + '] = ',end='')
+        print(columns[column])
 
-print(column_names)
-for name in column_names:
-    print(columns[name])
+    with open(config_general['filename'], "w") as csv_file:
+        for i in range(config_general['rows']+1):
+            for column in columns:
+                csv_file.write(columns[column][i] + ";")
+            csv_file.write('\n')
 
-with open(config['filename'], "w") as csv_file:
-    for column in column_names:
-        csv_file.write(column + ";")
-    csv_file.write('\n')
-    for i in range(config['rows']):
-        for column in column_names:
-            csv_file.write(columns[column][i] + ";")
-        csv_file.write('\n')
 
+if __name__ == '__main__':
+    main()
