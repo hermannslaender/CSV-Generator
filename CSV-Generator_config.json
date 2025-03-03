@@ -1,7 +1,7 @@
 {
 	"general": {
-		"rows": 15,
-		"filename": "datei1.csv"
+		"rows": 150,
+		"filename": "demo.csv"
 		},
 	"columns": [
 		{

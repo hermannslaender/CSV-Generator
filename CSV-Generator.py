@@ -3,6 +3,47 @@ import sys
 import json
 from random import choice
 
+def create_sample():
+    with open('sample_config.json', "w") as sample_file:
+        sample_file.write('''{
+    "general": {
+        "rows": 15,
+        "filename": "demo.csv"
+        },
+    "columns": [
+        {
+            "type": "counter",
+            "title": "Counter 0",
+            "start": 1,
+            "stop": 99,
+            "step": 1,
+            "width": 4,
+            "leading_zero": true,
+            "enabled": true
+        },
+        {
+            "type": "random_string",
+            "title": "Random String 0",
+            "length": 12,
+            "character_set": "abcdefghijklmnopqrstuvwxyz",
+            "enabled": true
+        },
+        {
+            "type": "random_word",
+            "title": "Random Word 0",
+            "word_list": ["Merkur", "Venus", "Erde", "Mars", "Jupiter", "Saturn", "Uranus", "Neptun", "Pluto"],
+            "enabled": true
+        },
+        {
+            "type": "word_cycle",
+            "title": "Word Cycle 0",
+            "word_list": ["Januar", "Februar", "März", "Aril", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+            "enabled": true
+        }
+    ]
+}
+''')
+
 
 def counter(config_rows, item):
     column = [item['title']]
@@ -48,7 +89,18 @@ def word_cycle(config_rows, item):
 
 
 def main():
-    with open('CSV-Generator_config.json') as json_data:
+    if len(sys.argv) == 1:
+        print('Es muss ein Dateiname als einziger Parameter übergeben werden.')
+        print('z.B.: CSV-Generator.exe d:\\CSV-Generator_config.json')
+        print()
+        create_sample()
+        print('Eine neue Vorlage wurde erstellt.')
+        print()
+        input('ENTER zum beenden')
+        sys.exit()
+
+    #with open('Briefmarken.json') as json_data:
+    with open(sys.argv[1]) as json_data:
         config = json.load(json_data)
 
     config_general = config['general']
@@ -79,18 +131,31 @@ def main():
                     columns[column] = word_cycle(config_rows, item)
                 case _:
                     print('Fehler')
+
+            print('column[' + str(column) + '] = ',end='')
+            print(columns[column])
+
         else:
             print('disabled')
 
-        print('column[' + str(column) + '] = ',end='')
-        print(columns[column])
 
     with open(config_general['filename'], "w") as csv_file:
-        for i in range(config_general['rows']+1):
+        for i in range(config_general['rows']+1): #erste Reihe enthält den Titel
             for column in columns:
                 csv_file.write(columns[column][i] + ";")
             csv_file.write('\n')
 
 
-if __name__ == '__main__':
-    main()
+try:
+
+    if __name__ == '__main__':
+        main()
+
+except Exception as e:
+    print('Ein Fehler ist aufgetreten:')
+    print({e})
+    print()
+    create_sample()
+    print('Eine neue Vorlage wurde erstellt.')
+    print()
+    input('ENTER zum beenden')
