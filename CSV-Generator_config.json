@@ -1,0 +1,54 @@
+{
+	"general": {
+		"rows": 150,
+		"filename": "demo.csv"
+		},
+	"columns": [
+		{
+			"type": "counter",
+			"title": "Counter 0",
+			"start": 1,
+			"stop": 999999,
+			"step": 1,
+			"width": 6,
+			"leading_zero": true,
+			"enabled": true
+		},
+		{
+			"type": "random_string",
+			"title": "Random String 0",
+			"length": 12,
+			"character_set": "abcdefghijklmnopqrstuvwxyz",
+			"enabled": true
+		},
+		{
+			"type": "counter",
+			"title": "Counter 1",
+			"start": 99,
+			"stop": 1,
+			"step": -3,
+			"width": 5,
+			"leading_zero": true,
+			"enabled": true
+		},
+		{
+			"type": "random_string",
+			"title": "Random String 0",
+			"length": 8,
+			"character_set": "01",
+			"enabled": true
+		},
+		{
+			"type": "random_word",
+			"title": "Random Word 0",
+			"word_list": ["Merkur", "Venus", "Erde", "Mars", "Jupiter", "Saturn", "Uranus", "Neptun", "Pluto"],
+			"enabled": true
+		},
+		{
+			"type": "word_cycle",
+			"title": "Word Cycle 0",
+			"word_list": ["Januar", "Februar", "März", "Aril", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+			"enabled": true
+		}
+	]
+}
